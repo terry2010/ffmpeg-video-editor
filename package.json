@@ -1,0 +1,18 @@
+{
+  "name": "ffmpeg-video-editor",
+  "version": "1.0.0",
+  "main": "main.js",
+  "repository": "https://github.com/terry2010/ffmpeg-video-editor.git",
+  "author": "terry <jstel@126.com>",
+  "license": "GPL",
+  "dependencies": {
+    "ffmpeg-static-electron": "^2.0.3",
+    "ffprobe-static": "^3.0.0",
+    "ffprobe-static-electron": "^2.0.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@ffprobe-installer/ffprobe": "^1.4.1",
+    "electron": "16.0.6"
+  }
+}

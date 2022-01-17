@@ -1,0 +1,1 @@
+global.manWindow = new (require('../module/mainWindow/mainWindow'))
