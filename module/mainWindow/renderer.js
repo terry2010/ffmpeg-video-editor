@@ -1,17 +1,44 @@
 const {ipcRenderer} = require('electron')
-
-document.getElementById('filePath').addEventListener('change', (ev) => {
-    // console.log(input.files)
-})
+let FILE_INFO = {path: "", name: "", subtitle: []}
 document.querySelector('#filePath').addEventListener('change', (ev, f) => {
     console.log(document.querySelector('#filePath').files)
+    let data = {
+        action: "parseFile",
+        path: document.querySelector('#filePath').files[0].path,
+        name: document.querySelector('#filePath').files[0].name
+    }
+    ipcRenderer.send("file-message", data)
 })
 
-document.querySelector("#parseFile").addEventListener('click', () => {
-    console.log(document.querySelector('#filePath').files[0].path)
-    let data = {
-        action:"parseFile",
-        path:document.querySelector('#filePath').files[0].path
+
+document.querySelector("#extractSubtitle").addEventListener('click', () => {
+    if (FILE_INFO.subtitle.length < 1) {
+        return
     }
-    ipcRenderer.send("file-message",data)
+    let data = {
+        action: "extractSubtitle",
+        path: FILE_INFO.path,
+        name: FILE_INFO.name,
+        data: FILE_INFO.subtitle
+    }
+    ipcRenderer.send("file-message", data)
+})
+
+ipcRenderer.on('file-message', (event, args) => {
+    console.log("file-message", args)
+    if ("parseFile" === args.action) {
+        let _text = ""
+        FILE_INFO.path = args.path
+        FILE_INFO.name = args.name
+        FILE_INFO.subtitle = args.data
+        if (args.data.length > 0) {
+            args.data.forEach((v, k) => {
+                _text = _text + "<br/>" + v.index + ":" + v.name
+            })
+        } else {
+            _text = "没有原生字幕"
+        }
+        document.querySelector('#subtitleList').innerHTML = _text
+        console.log(_text)
+    }
 })
