@@ -6,7 +6,7 @@ const path = require('path')
 const {exec, execSync} = require('child_process')
 
 
-ipcMain.on('file-message', (event, args) => {
+ipcMain.on('file-message', async (event, args) => {
     console.log(args)
     console.log(ffmpeg.path);
     console.log(ffprobe.path);
@@ -29,8 +29,8 @@ ipcMain.on('file-message', (event, args) => {
         if (result.hasOwnProperty('streams') && result.streams.length > 0) {
             result.streams.forEach((v, k) => {
                 let _lang = "sub"
-                if(v.tags.hasOwnProperty('language')) {
-                    _lang=v.tags.language
+                if (v.tags.hasOwnProperty('language')) {
+                    _lang = v.tags.language
                 }
                 ret.push({
                     lang: _lang,
@@ -46,17 +46,18 @@ ipcMain.on('file-message', (event, args) => {
 
     if (args.action === "extractSubtitle") {
         if (args.data.length > 0) {
-            args.data.forEach(async (v, k) => {
+            _cmd = JSON.stringify(ffmpeg.path) + " -i " + JSON.stringify(args.path)
+            args.data.forEach( (v, k) => {
                 let _subtitlePath = path.dirname(args.path) + "/" + v.name
-                _cmd = JSON.stringify(ffmpeg.path) + " -i " + JSON.stringify(args.path) + " -vn -an -codec:s:" + v.index + " srt " + JSON.stringify(_subtitlePath)
-                _cmd = JSON.stringify(ffmpeg.path) + " -i " + JSON.stringify(args.path) + " -map \"0:" + v.index + "\" " + JSON.stringify(_subtitlePath)
-                console.log(_cmd)
-                await executeShellCMD(_cmd).then(r => {
-                    console.log("result:", r)
-                }).then(e => {
-                    console.log("e:", e)
-                })
+                _cmd = _cmd +" -map \"0:" + v.index + "\" " + JSON.stringify(_subtitlePath)
 
+
+            })
+            console.log(_cmd)
+            await executeShellCMD(_cmd).then(r => {
+                console.log("result:", r)
+            }).then(e => {
+                console.log("e:", e)
             })
         }
 
