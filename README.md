@@ -1,5 +1,6 @@
 # ffmpeg-video-editor
-editor video  based ffmpeg
+edit video  based  on ffmpeg
+
 
 run :
 ```angular2html
