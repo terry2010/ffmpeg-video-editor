@@ -39,6 +39,12 @@ ipcRenderer.on('file-message', (event, args) => {
             _text = "没有原生字幕"
         }
         document.querySelector('#subtitleList').innerHTML = _text
+        document.querySelector('#extractStatus').innerHTML = "ready"
+        console.log(_text)
+    }
+    if("extractStatus" === args.action) {
+        console.log("args",args)
+        document.querySelector('#extractStatus').innerHTML = args.msg
         console.log(_text)
     }
 })

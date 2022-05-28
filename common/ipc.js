@@ -54,11 +54,35 @@ ipcMain.on('file-message', async (event, args) => {
 
             })
             console.log(_cmd)
-            await executeShellCMD(_cmd).then(r => {
+            await executeShellCMD(_cmd,(msg)=>{
+                retargs = {
+                    action :"extractStatus",
+                    msg : msg
+                }
+                event.reply("file-message", retargs)
+            }).then(r => {
+                if (0 === r) {
+                    retargs = {
+                        action :"extractStatus",
+                        msg : 'success!'
+                    }
+                }else {
+                    retargs = {
+                        action :"extractStatus",
+                        msg : 'fail!'
+                    }
+                }
+
+                event.reply("file-message", retargs)
                 console.log("========================================================")
                 console.log("result:", r)
-            }).then(e => {
-                console.log("========================================================")
+            }).catch(e => {
+                retargs = {
+                    action :"extractStatus",
+                    msg : 'failed!'
+                }
+                event.reply("file-message", retargs)
+                console.log(">>>>>>>>>>>>>>>>>>>>>========================================================")
                 console.log("e:", e)
             })
         }
@@ -95,37 +119,49 @@ async function executeShellCMD(_cmd = "", _callback = null) {
             }
         })
         ch.on('error', (a, b, c) => {
-            console.log("ch:stderr:data", a, b, c)
+            console.log(">>>>>ch:stderr:data", a, b, c)
             return reject(a)
         })
         ch.on('message', (_data, b, c) => {
-            console.log("ch:stdout:message", _data, b, c)
+            console.log("||||||ch:stdout:message", _data, b, c)
             if ("function" === typeof (_callback)) {
                 _callback(_data)
             }
         })
         ch.on('exit', (a, b, c) => {
-            console.log("ch:stdout:exit", a, b, c)
+            console.log("!!!!!!ch:stdout:exit", a, b, c)
             return resolve(a)
         })
         ch.on('close', (a, b, c) => {
-            console.log("ch:stdout:close", a, b, c)
+            console.log("<<<<<<ch:stdout:close", a, b, c)
             return resolve(a)
         })
         ch.on('disconnect', (a, b, c) => {
-            console.log("ch:stdout:disconnect", a, b, c)
+            console.log("<><><><>ch:stdout:disconnect", a, b, c)
             reject(a)
         })
 
 
         ch.stdout.on('data', (_data, b, c) => {
-            console.log("!!!!!ch.stdout:data", _data, b, c)
+            console.log("::::::::ch.stdout:data", _data, b, c)
             if ("function" === typeof (_callback)) {
                 _callback(_data)
             }
         })
-        ch.stderr.on('data', (a, b, c) => {
-            console.log("ch.stderr:data", a, b, c)
+        ch.stderr.on('data', (_data, b, c) => {
+            console.log("\n\n\n\n\n::::::::ch.stderr:data", _data, b, c)
+            console.log("_data",_data)
+            console.log("b",b)
+            console.log("c",c)
+            if ("function" === typeof (_callback)) {
+                _callback(_data)
+            }
+        })
+        ch.stderr.on('error', (_data, b, c) => {
+            console.log("::::::::ch.stderr:data", _data, b, c)
+            if ("function" === typeof (_callback)) {
+                _callback(_data)
+            }
         })
     }))
 
