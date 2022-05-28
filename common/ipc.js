@@ -55,8 +55,10 @@ ipcMain.on('file-message', async (event, args) => {
             })
             console.log(_cmd)
             await executeShellCMD(_cmd).then(r => {
+                console.log("========================================================")
                 console.log("result:", r)
             }).then(e => {
+                console.log("========================================================")
                 console.log("e:", e)
             })
         }

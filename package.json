@@ -6,16 +6,16 @@
   "author": "terry <jstel@126.com>",
   "license": "GPL",
   "scripts": {
-    "pack": "electron-packager . ffmpeg-video-editor --out ./dist --prune --overwrite --ignore=data --asar --ignore=node_modules/.bin "
+    "pack": "electron-packager . ffmpeg-video-editor --out ./dist --prune --overwrite --ignore=data  --ignore=node_modules/.bin "
   },
   "dependencies": {
     "ffmpeg-static-electron": "^2.0.3",
     "ffprobe-static": "^3.0.0",
     "ffprobe-static-electron": "^2.0.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "@ffprobe-installer/ffprobe": "^1.4.1"
   },
   "devDependencies": {
-    "@ffprobe-installer/ffprobe": "^1.4.1",
     "electron": "16.0.6"
   }
 }
